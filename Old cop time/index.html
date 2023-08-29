@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="./bandit.png" />
+    <title>Fast & Furious</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      #canvas {
+        width: 1430px;
+        height: 790px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      #game-container {
+        /* 15移速
+        width: 1430px;
+        height: 740px; */
+        /* 20移速
+       
+        */
+        width: 1430px;
+        height: 790px;
+        position: absolute;
+        box-shadow: 1px 1px 5px 3px rgba(0, 0, 0, 0.5);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #player1 {
+        background: url(/p1.gif);
+        background-size: cover;
+        width: 65px;
+        height: 90px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      #player2 {
+        background: url(/p3.gif);
+        background-size: cover;
+        width: 54px;
+        /* width: 88px; */
+        height: 90px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        transform: scaleX(-1);
+      }
+      .mask {
+        width: 1430px;
+        height: 790px;
+        background-color: yellow;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: red;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: bold;
+        display: none;
+      }
+      #box {
+        width: 500px;
+        height: 30px;
+        border: black 2px solid;
+        position: relative;
+        color: black;
+        margin: 0 auto;
+      }
+      #progress {
+        width: 0px;
+        height: 30px;
+        text-align: right;
+        line-height: 33px;
+        font-family: "华文彩云";
+        font-size: 24px;
+      }
+      #btn {
+        width: 50px;
+        height: 30px;
+      }
+      #n {
+        position: absolute;
+        top: 5px;
+        right: 0;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .user {
+        position: absolute;
+        top: 10%;
+        font-size: 18px;
+        left: -16%;
+        color: black;
+        font-weight: bolder;
+      }
+      .countDown {
+        font-family: "Agency FB";
+        font-size: 20px;
+        font-weight: bolder;
+        text-align: center;
+      }
+      #prop {
+        animation: rotate 2s linear infinite;
+      }
+      .propCountp2 {
+        position: fixed;
+        right: 3%;
+        top: 9%;
+      }
+      .propCountp2 > div {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        margin-top: 10px;
+      }
+      .propCountp1 {
+        position: fixed;
+        left: 3%;
+        top: 9%;
+      }
+      .propCountp1 > div {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .skillName {
+        font-size: 25px;
+        font-family: Cursive;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .pai {
+        position: absolute;
+        top: -55px;
+        left: -400px;
+      }
+      .rest {
+        position: absolute;
+        top: 5px;
+        left: -250px;
+      }
+      .erji-top {
+        position: fixed;
+        width: 1430px;
+        top: 50%;
+        height: 790px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #000000;
+        z-index: 999;
+        display: none;
+      }
+      table {
+        border-collapse: collapse;
+        width: 1430px;
+        font-size: 24px;
+        font-family: Cursive;
+      }
+      td,
+      th {
+        border: 1px solid white;
+        color: white;
+        text-align: center;
+      }
+      .header1 {
+        width: 85px;
+        height: 85px;
+        background: url(/1.gif);
+        background-size: 85px;
+        background-repeat: no-repeat;
+        position: relative;
+        left: -19px;
+        top: 35px;
+        display: none;
+      }
+      .header11 {
+        width: 85px;
+        height: 85px;
+        background: url(/头像框2.png);
+        background-size: cover;
+        position: absolute;
+        left: -19px;
+        top: -18px;
+        display: none;
+      }
+      .header2 {
+        width: 85px;
+        height: 85px;
+        background: url(/头像框3.png);
+        background-size: cover;
+        position: relative;
+        left: -19px;
+        top: -18px;
+        display: none;
+      }
+      .header22 {
+        width: 85px;
+        height: 85px;
+        background: url(/1.gif);
+        background-size: 85px;
+        background-repeat: no-repeat;
+        position: absolute;
+        left: -19px;
+        top: 35px;
+        display: none;
+      }
+      #countdown {
+        font-size: 200px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        font-family: "Algerian";
+        animation: countdown 1.1s infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        display: none;
+      }
+
+      @keyframes countdown {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="countdown"></div>
+    <canvas id="canvas"></canvas>
+    <div class="erji-top">
+      <table>
+        <thead>
+          <tr>
+            <th>TOP</th>
+            <th>名称</th>
+            <th>回合</th>
+            <th>剩余血量</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <audio id="myAudio" src="./终极时刻.mp3"></audio>
+    <button style="display: none" id="playButton">播放音频</button>
+    <div class="countDown">终级之战还未开启</div>
+    <div id="box">
+      <img src="./排行榜.png" class="pai" alt="" />
+      <img width="100px" class="rest" src="./rest.png" alt="" />
+      <div class="user">张匪HP :</div>
+      <p id="progress">0%</p>
+      <button id="btn" style="display: none"></button>
+    </div>
+    <div id="game-container">
+      <div class="leiting"></div>
+      <div id="player1">
+        <!-- <div class="header1"></div>
+        <div class="header11"></div> -->
+      </div>
+      <div id="player2">
+        <!-- <div class="header2"></div>
+        <div class="header22"></div> -->
+      </div>
+    </div>
+    <div class="mask"></div>
+    <div class="propCountp2">
+      <h1 style="text-align: center; font-family: 楷体">匪</h1>
+      <div>
+        <span class="skillName" style="color: rgb(189, 38, 38)">禁锢</span>
+        <img width="50px" src="./禁锢.png" alt="" />&nbsp;×<span
+          class="ds"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: rgb(11, 11, 199)">致盲</span>
+        <img width="50px" src="./致盲.png" alt="" />&nbsp;×<span
+          class="ys"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: rgba(0, 0, 0, 0.869)">穿梭</span>
+        <img width="50px" src="./穿梭.png" alt="" />&nbsp;×<span
+          class="cs"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: rgba(255, 0, 0, 0.869)"
+          >治疗</span
+        >
+        <img width="50px" src="./治疗.png" alt="" />&nbsp;×<span
+          class="zl"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: rgb(230, 198, 20)">群魔乱舞</span>
+        <img width="50px" src="./群魔乱舞.png" alt="" />&nbsp;×<span
+          class="qmlw"></span>
+      </div>
+    </div>
+    <div class="propCountp1">
+      <h1 style="text-align: center; font-family: 楷体">警</h1>
+      <div>
+        <span class="skillName" style="color: rgb(65, 151, 3)">中毒</span>
+        <img width="50px" src="./中毒.png" alt="" />&nbsp;×<span
+          class="zd"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: blueviolet">剧毒</span>
+        <img width="50px" src="./剧毒.png" alt="" />&nbsp;×<span
+          class="jd"></span>
+      </div>
+      <div>
+        <span class="skillName" style="color: deeppink">迟缓</span>
+        <img width="50px" src="./束缚.png" alt="" />&nbsp;×<span
+          class="ch"></span>
+      </div>
+    </div>
+    <script>
+      function startCountdown() {
+        var countdownElement = document.getElementById("countdown");
+        countdownElement.style.display = "block";
+        var count = 3;
+        countdownElement.textContent = count;
+        var countdownInterval = setInterval(function () {
+          count--;
+          countdownElement.textContent = count;
+          if (count == 0) {
+            countdownElement.textContent = "开始!";
+            localStorage.removeItem("immobilizeCountPlayer2");
+            localStorage.removeItem("cloakingCountPlayer2");
+            localStorage.removeItem("danceCountPlayer2");
+            localStorage.removeItem("transferCountPlayer2");
+            localStorage.removeItem("toxicCountPlayer2");
+            localStorage.removeItem("highlytoxicCountPlayer2");
+            localStorage.removeItem("slowCountPlayer2");
+            localStorage.removeItem("cureCountPlayer2");
+            localStorage.removeItem("player2Moving_one");
+          }
+          if (count < 0) {
+            clearInterval(countdownInterval);
+            location.reload();
+          }
+        }, 1000);
+      }
+      var gameContainer = document.getElementById("game-container");
+      var player1 = document.getElementById("player1");
+      var player2 = document.getElementById("player2");
+      var canvas = document.getElementById("canvas");
+      var lsArrTop = localStorage.getItem("lsArrTop");
+      if (lsArrTop == null) {
+        localStorage.setItem("lsArrTop", JSON.stringify([]));
+      } else {
+        lsArrTop = JSON.parse(lsArrTop);
+        lsArrTop = lsArrTop.sort(function (a, b) {
+          if (a.bout === b.bout) {
+            return b.bloodVolume - a.bloodVolume;
+          }
+          return a.bout - b.bout;
+        });
+        let str = "";
+        lsArrTop.forEach((item, i) => {
+          str += `<tr>
+                   <td><img src="${
+                     i == 0
+                       ? "./first.png"
+                       : "" || i == 1
+                       ? "./second.png"
+                       : "" || i == 2
+                       ? "./last.png"
+                       : ""
+                   }" alt="">${i >= 3 ? i + 1 : ""}</td>
+                   <td>${item.name}</td>
+                   <td>${item.bout}</td>
+                   <td>${item.bloodVolume}</td>
+                 </tr>`;
+        });
+        document.querySelector("tbody").innerHTML = str;
+      }
+      document.querySelector(".rest").addEventListener("click", function () {
+        localStorage.removeItem("lsArrTop");
+        location.reload();
+      });
+      var progress = document.getElementById("progress");
+      var btn = document.getElementById("btn");
+      var ds = document.querySelector(".ds");
+      var ys = document.querySelector(".ys");
+      var cs = document.querySelector(".cs");
+      var zd = document.querySelector(".zd");
+      var zl = document.querySelector(".zl");
+      var jd = document.querySelector(".jd");
+      var ch = document.querySelector(".ch");
+      var qmlw = document.querySelector(".qmlw");
+      // 中毒技能倒计时
+      var tearSkill = null;
+      // 设置减血次数
+      let jianCount = 0;
+      // 治疗技能倒计时
+      var cureSkill = null;
+      // 设置加血次数
+      let jiaCount = 0;
+      // 渲染初始数量
+      // 群魔乱舞技能倒计时
+      let danceTime = null;
+      // 设置跳舞次数
+      var danceTimecount = 0;
+      ds.innerHTML = localStorage.getItem("immobilizeCountPlayer2")
+        ? localStorage.getItem("immobilizeCountPlayer2")
+        : 0;
+      ys.innerHTML = localStorage.getItem("cloakingCountPlayer2")
+        ? localStorage.getItem("cloakingCountPlayer2")
+        : 0;
+      cs.innerHTML = localStorage.getItem("transferCountPlayer2")
+        ? localStorage.getItem("transferCountPlayer2")
+        : 0;
+      zd.innerHTML = localStorage.getItem("toxicCountPlayer2")
+        ? localStorage.getItem("toxicCountPlayer2")
+        : 0;
+      zl.innerHTML = localStorage.getItem("cureCountPlayer2")
+        ? localStorage.getItem("cureCountPlayer2")
+        : 0;
+      jd.innerHTML = localStorage.getItem("highlytoxicCountPlayer2")
+        ? localStorage.getItem("highlytoxicCountPlayer2")
+        : 0;
+      ch.innerHTML = localStorage.getItem("slowCountPlayer2")
+        ? localStorage.getItem("slowCountPlayer2")
+        : 0;
+      qmlw.innerHTML = localStorage.getItem("danceCountPlayer2")
+        ? localStorage.getItem("danceCountPlayer2")
+        : 0;
+      var gameWidth = gameContainer.offsetWidth;
+      var gameHeight = gameContainer.offsetHeight;
+      var HPcolor = localStorage.getItem("HPcolor");
+      document.getElementById("progress").style.background = HPcolor;
+      let endTimer = null;
+      let timer = null;
+      let HP = localStorage.getItem("HP");
+      var audio = document.getElementById("myAudio");
+      let mask = document.querySelector(".mask");
+      // 创建减少时间的道具
+      var prop = document.createElement("div");
+      // 创建增加时间的道具
+      var addprop = document.createElement("div");
+      // 创建定身道具
+      var immobilize = document.createElement("div");
+      // 创建隐身道具
+      var cloaking = document.createElement("div");
+      // 创建传送道具
+      var transfer = document.createElement("div");
+      // 创建中毒道具
+      var toxic = document.createElement("div");
+      // 创建治疗道具
+      var cure = document.createElement("div");
+      // 创建剧毒道具
+      var highlytoxic = document.createElement("div");
+      // 创建迟缓道具
+      var slow = document.createElement("div");
+      // 创建跳舞道具
+      var dance = document.createElement("div");
+      var minutes = 0;
+      var seconds = 0;
+      // 玩家二的定身道具数量
+      var immobilizeCountPlayer2 = 0;
+      // 玩家二的隐身道具数量
+      var cloakingCountPlayer2 = 0;
+      // 玩家二的传送道具数量
+      var transferCountPlayer2 = 0;
+      // 玩家一的中毒道具数量
+      var toxicCountPlayer2 = 0;
+      // 玩家一的中毒道具数量
+      var cureCountPlayer2 = 0;
+      // 玩家一的剧毒道具数量
+      var highlytoxicCountPlayer2 = 0;
+      // 玩家一的迟缓道具数量
+      var slowCountPlayer2 = 0;
+      // 跳舞技能次数
+      var danceCountPlayer2 = 0;
+      // 定身状态
+      var p1immobilize = true;
+      // 隐身状态
+      var p2cloaking = true;
+      // 开始状态
+      var start = false;
+      // 中毒状态状态
+      var p2toxic = true;
+      // 剧毒状态状态
+      var p2highlytoxic = true;
+      // 跳舞状态状态
+      var p2dance = true;
+      // 治疗状态状态
+      var p2cure = true;
+      // 迟缓状态
+      var slowstate = false;
+      // 休息时间判定
+      var breakTime = false;
+      // 无敌状态判定
+      var invincible = false;
+      let w = localStorage.getItem("w");
+      var jianHp = 0;
+      if (HP == null) {
+        localStorage.setItem("HP", 0);
+      }
+      if (HP == 0) {
+        localStorage.setItem("HPcolor", "rgb(18, 221, 18)");
+      }
+      function addZero(num) {
+        return num < 10 ? "0" + num : num;
+      }
+      var player1Moving = {
+        up: false,
+        down: false,
+        left: false,
+        right: false,
+      };
+      var player2Moving = {
+        up: false,
+        down: false,
+        left: false,
+        right: false,
+        one: false,
+        two: false,
+        three: false,
+      };
+      document.addEventListener("keydown", function (event) {
+        switch (event.keyCode) {
+          case 87: // W key
+            player1Moving.up = true;
+            if (player1.style.transform == "scaleX(1)") {
+              player1.style.background = "url(/p2.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "122px";
+              player1.style.transform = "scaleX(1)";
+            } else {
+              player1.style.background = "url(/p2.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "122px";
+              player1.style.transform = "scaleX(-1)";
+            }
+            break;
+          case 83: // S key
+            player1Moving.down = true;
+            if (player1.style.transform == "scaleX(1)") {
+              player1.style.background = "url(/p2.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "122px";
+              player1.style.transform = "scaleX(1)";
+            } else {
+              player1.style.background = "url(/p2.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "122px";
+              player1.style.transform = "scaleX(-1)";
+            }
+            break;
+          case 65: // A key
+            player1Moving.left = true;
+            player1.style.background = "url(/p2.gif)";
+            player1.style.backgroundSize = "cover";
+            player1.style.width = "122px";
+            player1.style.transform = "scaleX(-1)";
+            break;
+          case 68: // D key
+            player1Moving.right = true;
+            player1.style.background = "url(/p2.gif)";
+            player1.style.backgroundSize = "cover";
+            player1.style.width = "122px";
+            player1.style.transform = "scaleX(1)";
+            break;
+          case 38: // Up arrow key
+            player2Moving.up = true;
+            if (player2.style.transform == "scaleX(1)") {
+              player2.style.background = "url(/p4.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "88px";
+              player2.style.transform = "scaleX(1)";
+            } else {
+              player2.style.background = "url(/p4.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "88px";
+              player2.style.transform = "scaleX(-1)";
+            }
+            break;
+          case 40: // Down arrow key
+            player2Moving.down = true;
+            if (player2.style.transform == "scaleX(1)") {
+              player2.style.background = "url(/p4.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "88px";
+              player2.style.transform = "scaleX(1)";
+            } else {
+              player2.style.background = "url(/p4.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "88px";
+              player2.style.transform = "scaleX(-1)";
+            }
+            break;
+          case 37: // Left arrow key
+            player2Moving.left = true;
+            player2.style.background = "url(/p4.gif)";
+            player2.style.backgroundSize = "cover";
+            player2.style.width = "88px";
+            player2.style.transform = "scaleX(-1)";
+            break;
+          case 39: // Right arrow key
+            player2Moving.right = true;
+            player2.style.background = "url(/p4.gif)";
+            player2.style.backgroundSize = "cover";
+            player2.style.width = "88px";
+            player2.style.transform = "scaleX(1)";
+            break;
+          case 97: // 1 arrow key
+            if (!breakTime) {
+              var onecount = localStorage.getItem("immobilizeCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              console.log("dian");
+              var player2Moving_one = localStorage.getItem("player2Moving_one");
+              if (player2Moving_one && onecount >= 1 && p1immobilize) {
+                onecount--;
+                // 渲染--后的数量
+                ds.innerHTML = onecount;
+                localStorage.setItem("immobilizeCountPlayer2", onecount);
+                p1immobilize = false;
+                setTimeout(function () {
+                  p1immobilize = true;
+                }, 3000);
+                console.log("定身");
+              }
+            }
+            break;
+          case 98: // 2 arrow key
+            if (!breakTime) {
+              var twocount = localStorage.getItem("cloakingCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && twocount >= 1 && p2cloaking) {
+                twocount--;
+                // 渲染--后的数量
+                ys.innerHTML = twocount;
+                localStorage.setItem("cloakingCountPlayer2", twocount);
+                // 定身
+                p2cloaking = false;
+                player2.style.display = "none";
+                setTimeout(function () {
+                  p2cloaking = true;
+                  player2.style.display = "block";
+                }, 3000);
+                console.log("隐身");
+              }
+            }
+            break;
+          case 99: // 3 arrow key
+            player2Moving.three = true;
+            if (!breakTime) {
+              var threecount = localStorage.getItem("transferCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_three =
+                localStorage.getItem("player2Moving_one");
+              if (
+                player2Moving_three &&
+                threecount >= 1 &&
+                (player2Moving.up ||
+                  player2Moving.down ||
+                  player2Moving.left ||
+                  player2Moving.right)
+              ) {
+                threecount--;
+                // 渲染--后的数量
+                cs.innerHTML = threecount;
+                localStorage.setItem("transferCountPlayer2", threecount);
+                //闪现
+                // "上" + player2Moving.up,
+                // "下" + player2Moving.down,
+                // "左" + player2Moving.left,
+                // "右" + player2Moving.right;
+                if (player2Moving.up) {
+                  player2.style.top = player2.offsetTop - 200 + "px";
+                }
+                if (player2Moving.down) {
+                  player2.style.top = player2.offsetTop + 200 + "px";
+                }
+                if (player2Moving.left) {
+                  player2.style.left = player2.offsetLeft - 200 + "px";
+                }
+                if (player2Moving.right) {
+                  player2.style.left = player2.offsetLeft + 200 + "px";
+                }
+                console.log("闪现");
+              }
+            }
+            break;
+          case 74: // 3 arrow key
+            if (!breakTime) {
+              var fourcount = localStorage.getItem("toxicCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && fourcount >= 1 && p2toxic) {
+                fourcount--;
+                // 渲染--后的数量
+                p2toxic = false;
+                zd.innerHTML = fourcount;
+                localStorage.setItem("toxicCountPlayer2", fourcount);
+                // // 持续减血
+                jianCount = 0;
+                tearSkill = setInterval(function () {
+                  checsubtractkW(1);
+                  jianCount++;
+                  if (jianCount >= 15) {
+                    clearInterval(tearSkill);
+                    p2toxic = true;
+                  }
+                }, 500);
+                console.log("中毒");
+              }
+            }
+            break;
+          case 100: // 3 arrow key
+            if (!breakTime) {
+              var fivecount = localStorage.getItem("cureCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && fivecount >= 1 && p2cure && w < 100) {
+                fivecount--;
+                // 渲染--后的数量
+                p2cure = false;
+                zl.innerHTML = fivecount;
+                localStorage.setItem("cureCountPlayer2", fivecount);
+                // 加;
+                jiaCount = 0;
+                cureSkill = setInterval(function () {
+                  w = localStorage.getItem("w");
+                  console.log(w);
+                  if (w < 100) {
+                    plusW(-1);
+                    jiaCount++;
+                    if (jiaCount >= 10) {
+                      clearInterval(cureSkill);
+                      p2cure = true;
+                    }
+                  } else {
+                    clearInterval(cureSkill);
+                  }
+                }, 500);
+                console.log("治疗");
+              }
+            }
+            break;
+          case 101: // 3 arrow key
+            if (!breakTime) {
+              var sevencount = localStorage.getItem("danceCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && sevencount >= 1 && p2dance) {
+                sevencount--;
+                // 渲染--后的数量
+                p2dance = false;
+                qmlw.innerHTML = sevencount;
+                localStorage.setItem("danceCountPlayer2", sevencount);
+                fundance();
+                console.log("群魔乱舞");
+              }
+            }
+            break;
+          case 75: // 3 arrow key
+            if (!breakTime) {
+              var fivecount = localStorage.getItem("highlytoxicCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && fivecount >= 1 && p2highlytoxic) {
+                fivecount--;
+                // 渲染--后的数量
+                p2highlytoxic = false;
+                jd.innerHTML = fivecount;
+                localStorage.setItem("highlytoxicCountPlayer2", fivecount);
+                checsubtractkW(15);
+                console.log("剧毒");
+              }
+            }
+            break;
+          case 76: // 3 arrow key
+            if (!breakTime) {
+              var sixcount = localStorage.getItem("slowCountPlayer2");
+              // 持久化存储道具数量
+              // 第一回合禁用技能
+              var player2Moving_two = localStorage.getItem("player2Moving_one");
+              if (player2Moving_two && sixcount >= 1 && !slowstate) {
+                sixcount--;
+                // 渲染--后的数量
+                slowstate = true;
+                ch.innerHTML = sixcount;
+                localStorage.setItem("slowCountPlayer2", sixcount);
+                // // 持续减速
+                setTimeout(function () {
+                  slowstate = false;
+                }, 2000);
+                console.log("迟缓");
+              }
+            }
+            break;
+          case 32: // 3 arrow key
+            if (HP == 0 && !start) {
+              start = true;
+              startCountdown();
+              clearInterval(endTimer);
+            }
+            break;
+        }
+      });
+      document.addEventListener("keyup", function (event) {
+        switch (event.keyCode) {
+          case 87: // W key
+            player1Moving.up = false;
+            if (player1.style.transform == "scaleX(-1)") {
+              player1.style.background = "url(/p1.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "65px";
+              player1.style.transform = "scaleX(-1)";
+            } else {
+              player1.style.background = "url(/p1.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "65px";
+              player1.style.transform = "scaleX(1)";
+            }
+            break;
+          case 83: // S key
+            player1Moving.down = false;
+            if (player1.style.transform == "scaleX(-1)") {
+              player1.style.background = "url(/p1.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "65px";
+              player1.style.transform = "scaleX(-1)";
+            } else {
+              player1.style.background = "url(/p1.gif)";
+              player1.style.backgroundSize = "cover";
+              player1.style.width = "65px";
+              player1.style.transform = "scaleX(1)";
+            }
+            break;
+          case 65: // A key
+            player1Moving.left = false;
+            player1.style.background = "url(/p1.gif)";
+            player1.style.backgroundSize = "cover";
+            player1.style.width = "65px";
+            player1.style.transform = "scaleX(-1)";
+            break;
+          case 68: // D key
+            player1Moving.right = false;
+            player1.style.background = "url(/p1.gif)";
+            player1.style.backgroundSize = "cover";
+            player1.style.width = "65px";
+            player1.style.transform = "scaleX(1)";
+            break;
+          case 38: // Up arrow key
+            player2Moving.up = false;
+            if (player2.style.transform == "scaleX(-1)") {
+              player2.style.background = "url(/p3.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "54px";
+              player2.style.transform = "scaleX(-1)";
+            } else {
+              player2.style.background = "url(/p3.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "54px";
+              player2.style.transform = "scaleX(1)";
+            }
+            break;
+          case 40: // Down arrow key
+            player2Moving.down = false;
+            if (player2.style.transform == "scaleX(-1)") {
+              player2.style.background = "url(/p3.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "54px";
+              player2.style.transform = "scaleX(-1)";
+            } else {
+              player2.style.background = "url(/p3.gif)";
+              player2.style.backgroundSize = "cover";
+              player2.style.width = "54px";
+              player2.style.transform = "scaleX(1)";
+            }
+            break;
+          case 37: // Left arrow key
+            player2Moving.left = false;
+            player2.style.background = "url(/p3.gif)";
+            player2.style.backgroundSize = "cover";
+            player2.style.width = "54px";
+            player2.style.transform = "scaleX(-1)";
+            break;
+          case 39: // Right arrow key
+            player2Moving.right = false;
+            player2.style.background = "url(/p3.gif)";
+            player2.style.backgroundSize = "cover";
+            player2.style.width = "54px";
+            player2.style.transform = "scaleX(1)";
+            break;
+        }
+      });
+      let policeStop = false;
+      setTimeout(function () {
+        policeStop = true;
+      }, 2000);
+      var player2Top = null;
+      var player2Left = null;
+      function movePlayers() {
+        var player1Top = parseInt(player1.offsetTop);
+        var player1Left = parseInt(player1.offsetLeft);
+        player2Top = parseInt(player2.offsetTop);
+        player2Left = parseInt(player2.offsetLeft);
+        if (player1Moving.up && player1Top > 0 && policeStop && p1immobilize) {
+          player1.style.top = player1Top - 10 + "px";
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (
+          player1Moving.down &&
+          player1Top < gameHeight - player1.offsetHeight &&
+          policeStop &&
+          p1immobilize
+        ) {
+          player1.style.top = player1Top + 10 + "px";
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (
+          player1Moving.left &&
+          player1Left > 0 &&
+          policeStop &&
+          p1immobilize
+        ) {
+          player1.style.left = player1Left - 10 + "px";
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (
+          player1Moving.right &&
+          player1Left < gameWidth - player1.offsetWidth &&
+          policeStop &&
+          p1immobilize &&
+          player1Left != 1310
+        ) {
+          player1.style.left = player1Left + 10 + "px";
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (player2Moving.up && player2Top > 0) {
+          if (!slowstate) {
+            player2.style.top = player2Top - 20 + "px";
+          } else {
+            player2.style.top = player2Top - 10 + "px";
+          }
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (
+          player2Moving.down &&
+          player2Top < gameHeight - player2.offsetHeight
+        ) {
+          if (!slowstate) {
+            player2.style.top = player2Top + 20 + "px";
+          } else {
+            player2.style.top = player2Top + 10 + "px";
+          }
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (player2Moving.left && player2Left > 16) {
+          if (!slowstate) {
+            player2.style.left = player2Left - 20 + "px";
+          } else {
+            player2.style.left = player2Left - 10 + "px";
+          }
+          if (HP >= 1) {
+            audio.play();
+          }
+        } else if (player2Moving.left && player2Left == 2) {
+          if (!slowstate) {
+            player2.style.left = player2Left - 2 + "px";
+          } else {
+            player2.style.left = player2Left - 2 + "px";
+          }
+          if (HP >= 1) {
+            audio.play();
+          }
+        } else if (player2Moving.left && player2Left > 0) {
+          if (!slowstate) {
+            player2.style.left = player2Left - 8 + "px";
+          } else {
+            player2.style.left = player2Left - 8 + "px";
+          }
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (
+          player2Moving.right &&
+          player2Left < gameWidth - player2.offsetWidth &&
+          player2Left <= 1320
+        ) {
+          if (!slowstate) {
+            player2.style.left = player2Left + 20 + "px";
+          } else {
+            player2.style.left = player2Left + 10 + "px";
+          }
+
+          if (HP >= 1) {
+            audio.play();
+          }
+        }
+        if (player2Top < 0) {
+          player2.style.top = 740 + "px";
+        } else if (player2Top > 740) {
+          player2.style.top = 0 + "px";
+        }
+        if (player2Left < 0) {
+          player2.style.left = 1380 + "px";
+        } else if (player2Left > 1380) {
+          player2.style.left = 0 + "px";
+        }
+        // 玩家一
+        var rect1 = player1.getBoundingClientRect();
+        // 玩家二
+        var rect2 = player2.getBoundingClientRect();
+        // 减少时间道具
+        var propTime = prop.getBoundingClientRect();
+        // 减少时间道具
+        var addpropTime = addprop.getBoundingClientRect();
+        //定身道具
+        var one = immobilize.getBoundingClientRect();
+        // 隐身道具
+        var two = cloaking.getBoundingClientRect();
+        // 传送道具
+        var three = transfer.getBoundingClientRect();
+        // 中毒道具
+        var four = toxic.getBoundingClientRect();
+        // 治疗道具
+        var five = cure.getBoundingClientRect();
+        // 剧毒道具
+        var six = highlytoxic.getBoundingClientRect();
+        // 迟缓道具
+        var seven = slow.getBoundingClientRect();
+        // 跳舞道具
+        var eight = dance.getBoundingClientRect();
+        // 检测减时间道具的碰撞
+        if (
+          rect2.left < propTime.right &&
+          rect2.right > propTime.left &&
+          rect2.top < propTime.bottom &&
+          rect2.bottom > propTime.top
+        ) {
+          let clock = localStorage.getItem("time");
+          localStorage.setItem("time", clock - 10);
+          // 随机出现下一个
+          resetPropPosition();
+        }
+        //-------------------
+        // 检测减时间道具的碰撞
+        if (
+          rect2.left < addpropTime.right &&
+          rect2.right > addpropTime.left &&
+          rect2.top < addpropTime.bottom &&
+          rect2.bottom > addpropTime.top &&
+          !invincible
+        ) {
+          let clock1 = localStorage.getItem("time");
+          localStorage.setItem("time", Number(clock1) + 5);
+          // 随机出现下一个
+          resetAddpropPosition();
+        }
+        //---------------------
+        if (
+          rect2.left < one.right &&
+          rect2.right > one.left &&
+          rect2.top < one.bottom &&
+          rect2.bottom > one.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          immobilizeCountPlayer2++;
+          // 渲染++后的数量
+          ds.innerHTML = immobilizeCountPlayer2;
+          localStorage.setItem(
+            "immobilizeCountPlayer2",
+            immobilizeCountPlayer2
+          );
+          resetImmobilizePosition();
+        }
+        //---------------------
+        if (
+          rect2.left < two.right &&
+          rect2.right > two.left &&
+          rect2.top < two.bottom &&
+          rect2.bottom > two.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          cloakingCountPlayer2++;
+          // 渲染++后的数量
+          ys.innerHTML = cloakingCountPlayer2;
+          localStorage.setItem("cloakingCountPlayer2", cloakingCountPlayer2);
+          resetCloakingPosition();
+        }
+        //-----------------------------
+        if (
+          rect2.left < three.right &&
+          rect2.right > three.left &&
+          rect2.top < three.bottom &&
+          rect2.bottom > three.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          transferCountPlayer2++;
+          // 渲染++后的数量
+          cs.innerHTML = transferCountPlayer2;
+          localStorage.setItem("transferCountPlayer2", transferCountPlayer2);
+          resetTransferPosition();
+        }
+        //-----------------------------
+        if (
+          rect1.left < four.right &&
+          rect1.right > four.left &&
+          rect1.top < four.bottom &&
+          rect1.bottom > four.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          toxicCountPlayer2++;
+          // 渲染++后的数量
+          zd.innerHTML = toxicCountPlayer2;
+          localStorage.setItem("toxicCountPlayer2", toxicCountPlayer2);
+          resetToxicPosition();
+        }
+        //-----------------------------
+        if (
+          rect2.left < five.right &&
+          rect2.right > five.left &&
+          rect2.top < five.bottom &&
+          rect2.bottom > five.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          cureCountPlayer2++;
+          // 渲染++后的数量
+          zl.innerHTML = cureCountPlayer2;
+          localStorage.setItem("cureCountPlayer2", cureCountPlayer2);
+          resetCurePosition();
+        }
+        //-----------------------------
+        if (
+          rect1.left < six.right &&
+          rect1.right > six.left &&
+          rect1.top < six.bottom &&
+          rect1.bottom > six.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          highlytoxicCountPlayer2++;
+          // 渲染++后的数量
+          jd.innerHTML = highlytoxicCountPlayer2;
+          localStorage.setItem(
+            "highlytoxicCountPlayer2",
+            highlytoxicCountPlayer2
+          );
+          resetHighlytoxicCountPlayer2Position();
+        }
+        //-----------------------------
+        if (
+          rect1.left < seven.right &&
+          rect1.right > seven.left &&
+          rect1.top < seven.bottom &&
+          rect1.bottom > seven.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          slowCountPlayer2++;
+          // 渲染++后的数量
+          ch.innerHTML = slowCountPlayer2;
+          localStorage.setItem("slowCountPlayer2", slowCountPlayer2);
+          resetSlowCountPlayer2Position();
+        }
+        //-----------------------------
+        if (
+          rect2.left < eight.right &&
+          rect2.right > eight.left &&
+          rect2.top < eight.bottom &&
+          rect2.bottom > eight.top
+        ) {
+          // 触碰后数量进行自加并持久化
+          danceCountPlayer2++;
+          // 渲染++后的数量
+          qmlw.innerHTML = danceCountPlayer2;
+          localStorage.setItem("danceCountPlayer2", danceCountPlayer2);
+          resetdanceCountPlayer2Position();
+        }
+        //---------------------
+        // 碰撞检测
+        if (
+          player1Top < player2Top + player2.offsetHeight &&
+          player1Top + player1.offsetHeight > player2Top &&
+          player1Left < player2Left + player2.offsetWidth &&
+          player1Left + player1.offsetWidth > player2Left &&
+          !invincible
+        ) {
+          jianHp = 30;
+          btn.onclick();
+          clearInterval(endTimer);
+          HP++;
+          setTimeout(function () {
+            w = localStorage.getItem("w");
+            console.log(w);
+            if (w <= 0) {
+              mask.style.display = "flex";
+              mask.innerHTML = "警胜ヾ(￣ー￣)X(^▽^)ゞ";
+              localStorage.setItem("HP", 0);
+              clearInterval(timer);
+              localStorage.removeItem("immobilizeCountPlayer2");
+              localStorage.removeItem("cloakingCountPlayer2");
+              localStorage.removeItem("danceCountPlayer2");
+              localStorage.removeItem("transferCountPlayer2");
+              localStorage.removeItem("toxicCountPlayer2");
+              localStorage.removeItem("cureCountPlayer2");
+              localStorage.removeItem("slowCountPlayer2");
+              localStorage.removeItem("highlytoxicCountPlayer2");
+              localStorage.removeItem("player2Moving_one");
+              localStorage.setItem("HPcolor", "rgb(18, 221, 18)");
+              localStorage.setItem("time", 227);
+              breakTime = true;
+              clearInterval(tearSkill);
+              clearInterval(cureSkill);
+            } else if (w >= 70) {
+              djs();
+              mask.style.display = "flex";
+              mask.innerHTML = `第${HP}回合结束!!!`;
+              localStorage.setItem("HP", HP);
+              localStorage.setItem("player2Moving_one", true);
+              localStorage.setItem("HPcolor", "yellow");
+              document.getElementById("progress").style.background = HPcolor;
+              clearInterval(tearSkill);
+              clearInterval(cureSkill);
+              breakTime = true;
+            } else if (w >= 40) {
+              mask.style.display = "flex";
+              mask.innerHTML = `第${HP}回合结束!!!`;
+              localStorage.setItem("HP", HP);
+              localStorage.setItem("HPcolor", "orange");
+              document.getElementById("progress").style.background = HPcolor;
+              breakTime = true;
+              clearInterval(tearSkill);
+              clearInterval(cureSkill);
+            } else {
+              mask.style.display = "flex";
+              mask.innerHTML = `第${HP}回合结束!!!`;
+              localStorage.setItem("HP", HP);
+              localStorage.setItem("HPcolor", "red");
+              document.getElementById("progress").style.background = HPcolor;
+              breakTime = true;
+              clearInterval(tearSkill);
+              clearInterval(cureSkill);
+            }
+          }, 1);
+          setTimeout(function () {
+            location.reload();
+          }, 2000);
+        }
+      }
+      // 减少时间道具随机刷新
+      // 减血
+      function checsubtractkW(num) {
+        jianHp = num;
+        btn.onclick();
+        setTimeout(function () {
+          w = localStorage.getItem("w");
+          console.log(w);
+          if (w == null) {
+            localStorage.setItem("w", 100);
+          } else if (w == 0) {
+            localStorage.setItem("w", 100);
+            progress.style.width = 100 + "%"; //给元素赋值变化后的宽度
+            progress.innerHTML = 100 + "%"; //同时百分比也要增长
+            localStorage.setItem("HPcolor", "rgb(18, 221, 18)");
+            document.getElementById("progress").style.background =
+              "rgb(18, 221, 18)";
+          } else {
+            progress.style.width = w + "%"; //给元素赋值变化后的宽度
+            progress.innerHTML = w + "%"; //同时百分比也要增长
+          }
+          if (w <= 0) {
+            mask.style.display = "flex";
+            mask.innerHTML = "警胜ヾ(￣ー￣)X(^▽^)ゞ";
+            HP++;
+            localStorage.setItem("HP", 0);
+            clearInterval(timer);
+            localStorage.removeItem("immobilizeCountPlayer2");
+            localStorage.removeItem("cloakingCountPlayer2");
+            localStorage.removeItem("danceCountPlayer2");
+            localStorage.removeItem("transferCountPlayer2");
+            localStorage.removeItem("toxicCountPlayer2");
+            localStorage.removeItem("highlytoxicCountPlayer2");
+            localStorage.removeItem("cureCountPlayer2");
+            localStorage.removeItem("player2Moving_one");
+            localStorage.removeItem("slowCountPlayer2");
+            localStorage.setItem("time", 227);
+            breakTime = true;
+            clearInterval(tearSkill);
+            clearInterval(cureSkill);
+            clearInterval(endTimer);
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          } else if (w == 70) {
+            djs();
+            mask.style.display = "flex";
+            HP++;
+            mask.innerHTML = `第${HP}回合结束!!!`;
+            localStorage.setItem("HP", HP);
+            localStorage.setItem("player2Moving_one", true);
+            localStorage.setItem("HPcolor", "yellow");
+            document.getElementById("progress").style.background = HPcolor;
+            breakTime = true;
+            clearInterval(tearSkill);
+            clearInterval(cureSkill);
+            clearInterval(endTimer);
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          } else if (w == 40) {
+            mask.style.display = "flex";
+            HP++;
+            mask.innerHTML = `第${HP}回合结束!!!`;
+            localStorage.setItem("HP", HP);
+            localStorage.setItem("HPcolor", "orange");
+            document.getElementById("progress").style.background = HPcolor;
+            breakTime = true;
+            clearInterval(tearSkill);
+            clearInterval(cureSkill);
+            clearInterval(endTimer);
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          } else if (w == 10) {
+            mask.style.display = "flex";
+            HP++;
+            mask.innerHTML = `第${HP}回合结束!!!`;
+            localStorage.setItem("HP", HP);
+            localStorage.setItem("HPcolor", "red");
+            document.getElementById("progress").style.background = HPcolor;
+            breakTime = true;
+            clearInterval(tearSkill);
+            clearInterval(cureSkill);
+            clearInterval(endTimer);
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          }
+        }, 1);
+      }
+
+      // 加血
+      function plusW(num) {
+        jianHp = num;
+        btn.onclick();
+        setTimeout(function () {
+          w = localStorage.getItem("w");
+          progress.style.width = w + "%"; //给元素赋值变化后的宽度
+          progress.innerHTML = w + "%"; //同时百分比也要增长
+          if (w >= 90) {
+            document.getElementById("progress").style.background =
+              "rgb(18, 221, 18)";
+          } else if (w <= 89 && w >= 70) {
+            document.getElementById("progress").style.background = "yellow";
+          } else if (w <= 69 && w >= 40) {
+            document.getElementById("progress").style.background = "yellow";
+          } else if (w <= 39 && w >= 10) {
+            document.getElementById("progress").style.background = "orange";
+          } else {
+            document.getElementById("progress").style.background = "red";
+          }
+        }, 1);
+      }
+
+      function resetPropPosition() {
+        var prop = document.getElementById("prop");
+        var propWidth = 50;
+        var propHeight = 50;
+        var maxPosX = gameWidth - propWidth;
+        var maxPosY = gameHeight - propHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        prop.style.left = randomPosX + "px";
+        prop.style.top = randomPosY + "px";
+        prop.style.display = "none";
+        setTimeout(function () {
+          prop.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建减少时间道具
+      prop.id = "prop";
+      prop.style.width = "50px";
+      prop.style.height = "50px";
+      prop.style.position = "absolute";
+      prop.style.background = "url(/djs.png)";
+      prop.style.backgroundRepeat = "no-repeat";
+      prop.style.backgroundSize = "contain";
+      // 第二回合才会出现
+      if (HP >= 1) {
+        gameContainer.appendChild(prop);
+        resetPropPosition();
+      }
+      //--------------------------------------------------
+      function resetAddpropPosition() {
+        var addprop = document.getElementById("addprop");
+        var addpropWidth = 50;
+        var addpropHeight = 50;
+        var maxPosX = gameWidth - addpropWidth;
+        var maxPosY = gameHeight - addpropHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        addprop.style.left = randomPosX + "px";
+        addprop.style.top = randomPosY + "px";
+        addprop.style.display = "none";
+        setTimeout(function () {
+          addprop.style.display = "block";
+        }, 3000);
+      }
+
+      // 群魔练舞效果
+      function fundance() {
+        invincible = true;
+        danceTime = setInterval(function () {
+          var randomPosX = Math.floor((Math.random() * 700) / 20) * 20;
+          var randomPosY = Math.floor((Math.random() * 1376) / 20) * 20;
+          console.log(randomPosX, randomPosY);
+          player2.style.top = randomPosX + "px";
+          player2.style.left = randomPosY + "px";
+          danceTimecount++;
+          if (danceTimecount >= 1000) {
+            danceTimecount = 0;
+            invincible = false;
+            p2dance = true;
+            clearInterval(danceTime);
+          }
+        });
+      }
+      // 创建减少时间道具
+      addprop.id = "addprop";
+      addprop.style.width = "50px";
+      addprop.style.height = "50px";
+      addprop.style.position = "absolute";
+      addprop.style.background = "url(/陷阱.png)";
+      addprop.style.backgroundRepeat = "no-repeat";
+      addprop.style.backgroundSize = "contain";
+      // 第二回合才会出现
+      if (HP >= 1) {
+        gameContainer.appendChild(addprop);
+        resetAddpropPosition();
+        setInterval(function () {
+          resetAddpropPosition();
+        }, 3000);
+      }
+      //---------------------------------------------
+
+      function resetImmobilizePosition() {
+        var immobilize = document.getElementById("immobilize");
+        var immobilizeWidth = 50;
+        var immobilizeHeight = 50;
+        var maxPosX = gameWidth - immobilizeWidth;
+        var maxPosY = gameHeight - immobilizeHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        immobilize.style.left = randomPosX + "px";
+        immobilize.style.top = randomPosY + "px";
+        immobilize.style.display = "none";
+        setTimeout(function () {
+          immobilize.style.display = "block";
+        }, 3000);
+      }
+      immobilize.id = "immobilize";
+      immobilize.style.width = "50px";
+      immobilize.style.height = "50px";
+      immobilize.style.position = "absolute";
+      immobilize.style.background = "url(/禁锢.png)";
+      immobilize.style.backgroundRepeat = "no-repeat";
+      immobilize.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(immobilize);
+        resetImmobilizePosition();
+      }
+
+      //------------------------------------------
+
+      function resetCloakingPosition() {
+        var cloaking = document.getElementById("cloaking");
+        var cloakingWidth = 50;
+        var cloakingHeight = 50;
+        var maxPosX = gameWidth - cloakingWidth;
+        var maxPosY = gameHeight - cloakingHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        cloaking.style.left = randomPosX + "px";
+        cloaking.style.top = randomPosY + "px";
+        cloaking.style.display = "none";
+        setTimeout(function () {
+          cloaking.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建隐身道具
+      cloaking.id = "cloaking";
+      cloaking.style.width = "50px";
+      cloaking.style.height = "50px";
+      cloaking.style.position = "absolute";
+      cloaking.style.background = "url(/致盲.png)";
+      cloaking.style.backgroundRepeat = "no-repeat";
+      cloaking.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(cloaking);
+        resetCloakingPosition();
+      }
+
+      //------------------------------------------
+
+      function resetTransferPosition() {
+        var transfer = document.getElementById("transfer");
+        var transferWidth = 50;
+        var transferHeight = 50;
+        var maxPosX = gameWidth - transferWidth;
+        var maxPosY = gameHeight - transferHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        transfer.style.left = randomPosX + "px";
+        transfer.style.top = randomPosY + "px";
+        transfer.style.display = "none";
+        setTimeout(function () {
+          transfer.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建传送道具
+      transfer.id = "transfer";
+      transfer.style.width = "50px";
+      transfer.style.height = "50px";
+      transfer.style.position = "absolute";
+      transfer.style.background = "url(/穿梭.png)";
+      transfer.style.backgroundRepeat = "no-repeat";
+      transfer.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(transfer);
+        resetTransferPosition();
+      }
+
+      //------------------------------------------
+
+      function resetToxicPosition() {
+        var toxic = document.getElementById("toxic");
+        var toxicWidth = 50;
+        var toxicHeight = 50;
+        var maxPosX = gameWidth - toxicWidth;
+        var maxPosY = gameHeight - toxicHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        toxic.style.left = randomPosX + "px";
+        toxic.style.top = randomPosY + "px";
+        toxic.style.display = "none";
+        setTimeout(function () {
+          toxic.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建传送道具
+      toxic.id = "toxic";
+      toxic.style.width = "50px";
+      toxic.style.height = "50px";
+      toxic.style.position = "absolute";
+      toxic.style.background = "url(/中毒.png)";
+      toxic.style.backgroundRepeat = "no-repeat";
+      toxic.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(toxic);
+        resetToxicPosition();
+      }
+
+      //------------------------------------------
+
+      function resetCurePosition() {
+        var cure = document.getElementById("cure");
+        var cureWidth = 50;
+        var cureHeight = 50;
+        var maxPosX = gameWidth - cureWidth;
+        var maxPosY = gameHeight - cureHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        cure.style.left = randomPosX + "px";
+        cure.style.top = randomPosY + "px";
+        cure.style.display = "none";
+        setTimeout(function () {
+          cure.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建传送道具
+      cure.id = "cure";
+      cure.style.width = "50px";
+      cure.style.height = "50px";
+      cure.style.position = "absolute";
+      cure.style.background = "url(/治疗.png)";
+      cure.style.backgroundRepeat = "no-repeat";
+      cure.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(cure);
+        resetCurePosition();
+      }
+
+      //------------------------------------------
+      function resetHighlytoxicCountPlayer2Position() {
+        var highlytoxic = document.getElementById("highlytoxic");
+        var highlytoxicWidth = 50;
+        var highlytoxicHeight = 50;
+        var maxPosX = gameWidth - highlytoxicWidth;
+        var maxPosY = gameHeight - highlytoxicHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        highlytoxic.style.left = randomPosX + "px";
+        highlytoxic.style.top = randomPosY + "px";
+        highlytoxic.style.display = "none";
+        setTimeout(function () {
+          highlytoxic.style.display = "block";
+        }, 20000);
+      }
+
+      // 创建传送道具
+      highlytoxic.id = "highlytoxic";
+      highlytoxic.style.width = "50px";
+      highlytoxic.style.height = "50px";
+      highlytoxic.style.position = "absolute";
+      highlytoxic.style.background = "url(/剧毒.png)";
+      highlytoxic.style.backgroundRepeat = "no-repeat";
+      highlytoxic.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(highlytoxic);
+        resetHighlytoxicCountPlayer2Position();
+      }
+
+      //------------------------------------------
+
+      function resetSlowCountPlayer2Position() {
+        var slow = document.getElementById("slow");
+        var slowWidth = 50;
+        var slowHeight = 50;
+        var maxPosX = gameWidth - slowWidth;
+        var maxPosY = gameHeight - slowHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        slow.style.left = randomPosX + "px";
+        slow.style.top = randomPosY + "px";
+        slow.style.display = "none";
+        setTimeout(function () {
+          slow.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建传送道具
+      slow.id = "slow";
+      slow.style.width = "50px";
+      slow.style.height = "50px";
+      slow.style.position = "absolute";
+      slow.style.background = "url(/束缚.png)";
+      slow.style.backgroundRepeat = "no-repeat";
+      slow.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(slow);
+        resetSlowCountPlayer2Position();
+      }
+
+      //------------------------------------------
+
+      function resetdanceCountPlayer2Position() {
+        var dance = document.getElementById("dance");
+        var danceWidth = 50;
+        var danceHeight = 50;
+        var maxPosX = gameWidth - danceWidth;
+        var maxPosY = gameHeight - danceHeight;
+        var randomPosX = Math.floor(Math.random() * maxPosX);
+        var randomPosY = Math.floor(Math.random() * maxPosY);
+        dance.style.left = randomPosX + "px";
+        dance.style.top = randomPosY + "px";
+        dance.style.display = "none";
+        setTimeout(function () {
+          dance.style.display = "block";
+        }, 3000);
+      }
+
+      // 创建传送道具
+      dance.id = "dance";
+      dance.style.width = "50px";
+      dance.style.height = "50px";
+      dance.style.position = "absolute";
+      dance.style.background = "url(/群魔乱舞.png)";
+      dance.style.backgroundRepeat = "no-repeat";
+      dance.style.backgroundSize = "contain";
+      // 第一回合才会出现
+      if (HP == 0) {
+        gameContainer.appendChild(dance);
+        resetdanceCountPlayer2Position();
+      }
+      //-------------------------------------------
+      // ***实现获取验证码倒计时不受刷新&关闭页面的影响
+      // 第一次进入页面获取时间如果不存在则是null
+      let get = localStorage.getItem("time");
+      // 如果是null就新定义时间
+      if (get == null) {
+        localStorage.setItem("time", 227);
+      } else {
+        if (get != 227) {
+          // 否则,也就是存在的话就直接调用点击事件
+          djs();
+          // 此处是为了刷新页面后直接显示刷新之前的倒计时, 如若不写, 会有一秒显示(获取倒计时)
+          minutes = Math.floor(get / 60);
+          seconds = get % 60;
+          document.querySelector(
+            ".countDown"
+          ).innerHTML = `倒计时: ${minutes}分:${addZero(seconds)}秒`;
+        }
+      }
+
+      function djs() {
+        // 定义新变量存储时间,如果存在就直接执行定时器
+        let get1 = localStorage.getItem("time");
+        // 写判断是为了解决刷新页面时,没有点击获取就自动执行的bug
+        if (get1 == null) {
+          // 如果不存在则新定义时间,
+          localStorage.setItem("time", 227);
+        }
+        // 创建定时器
+        timer = setInterval(function () {
+          // 获取本地存储中的时间 ,此时间是必定会存在的
+          let lotm = localStorage.getItem("time");
+          // 将描述进行自减1
+          lotm--;
+          // 然后重新渲染页面的内容
+          minutes = Math.floor(lotm / 60);
+          seconds = lotm % 60;
+          document.querySelector(
+            ".countDown"
+          ).innerHTML = `倒计时: ${minutes}分:${addZero(seconds)}秒`;
+
+          // 再将新的秒数存入本地存储中,以此来实现无限读取,存储的循环
+          localStorage.setItem("time", lotm);
+
+          if (lotm <= 0) {
+            // 当秒数为0的时候停止定时器
+            HP = localStorage.getItem("HP");
+            w = localStorage.getItem("w");
+            var playerName = prompt("请输入您的载入排行的名称", "王不留行");
+            if (lsArrTop.length < 10) {
+              lsArrTop.push({ name: playerName, bout: HP, bloodVolume: w });
+              localStorage.setItem("lsArrTop", JSON.stringify(lsArrTop));
+            } else {
+              if (lsArrTop[lsArrTop.length - 1].bout > HP) {
+                lsArrTop.splice(lsArrTop.length - 1, 1, {
+                  name: playerName,
+                  bout: HP,
+                  bloodVolume: w,
+                });
+                localStorage.setItem("lsArrTop", JSON.stringify(lsArrTop));
+              } else if (
+                lsArrTop[lsArrTop.length - 1].bout == HP &&
+                lsArrTop[lsArrTop.length - 1].bloodVolume < w
+              ) {
+                lsArrTop.splice(lsArrTop.length - 1, 1, {
+                  name: playerName,
+                  bout: HP,
+                  bloodVolume: w,
+                });
+                localStorage.setItem("lsArrTop", JSON.stringify(lsArrTop));
+              } else {
+                alert("成绩过差,无法进入排行");
+              }
+            }
+            clearInterval(timer);
+            // 清除本地存储中的时间
+            localStorage.removeItem("time");
+            // 内容变化
+            mask.style.display = "flex";
+            mask.innerHTML = "时间到! 匪胜︿(￣︶￣)︿";
+            localStorage.removeItem("immobilizeCountPlayer2");
+            localStorage.removeItem("cloakingCountPlayer2");
+            localStorage.removeItem("danceCountPlayer2");
+            localStorage.removeItem("transferCountPlayer2");
+            localStorage.removeItem("toxicCountPlayer2");
+            localStorage.removeItem("highlytoxicCountPlayer2");
+            localStorage.removeItem("slowCountPlayer2");
+            localStorage.removeItem("cureCountPlayer2");
+            localStorage.removeItem("player2Moving_one");
+            localStorage.setItem("HPcolor", "rgb(18, 221, 18)");
+            localStorage.setItem("w", 100);
+            localStorage.setItem("HP", 0);
+            breakTime = true;
+            setTimeout(function () {
+              localStorage.removeItem("currentTime");
+              location.reload();
+            }, 2000);
+          }
+        }, 1000);
+      }
+
+      endTimer = setInterval(movePlayers, 15);
+      //通过id获取元素
+      if (w == null) {
+        localStorage.setItem("w", 100);
+      }
+      if (w == 0) {
+        localStorage.setItem("w", 100);
+        progress.style.width = 100 + "%"; //给元素赋值变化后的宽度
+        progress.innerHTML = 100 + "%"; //同时百分比也要增长
+      } else {
+        progress.style.width = w + "%"; //给元素赋值变化后的宽度
+        progress.innerHTML = w + "%"; //同时百分比也要增长
+      }
+      //定义函数，并用元素的单击事件触发函数
+      btn.onclick = function () {
+        //启动定时器
+        var t = setTimeout(function () {
+          let t = localStorage.getItem("w");
+          t -= jianHp; //每隔指定时间，让进度条长度增加10
+          if (t <= 0) {
+            //判断进度条的长度有没有等于或大于指定长度
+            t = 0;
+            progress.style.width = t + "%"; //给元素赋值变化后的宽度
+            progress.innerHTML = t + "%"; //同时百分比也要增长
+          }
+          localStorage.setItem("w", t);
+        }); //每隔0.1秒执行一次
+      };
+      setTimeout(function () {
+        playButton.click();
+      });
+      window.addEventListener("DOMContentLoaded", (event) => {
+        var isPlaying = localStorage.getItem("isPlaying");
+        var currentTime = localStorage.getItem("currentTime");
+
+        if (isPlaying === "true") {
+          playAudio();
+        }
+
+        if (currentTime) {
+          audio.currentTime = parseFloat(currentTime);
+        }
+
+        audio.addEventListener("play", () => {
+          localStorage.setItem("isPlaying", "true");
+        });
+
+        audio.addEventListener("pause", () => {
+          localStorage.setItem("isPlaying", "false");
+        });
+
+        audio.addEventListener("timeupdate", () => {
+          localStorage.setItem("currentTime", audio.currentTime);
+        });
+
+        playButton.addEventListener("click", () => {
+          playAudio();
+        });
+
+        function playAudio() {
+          if (HP >= 1) {
+            audio.play().catch(function (error) {});
+          } else {
+            localStorage.removeItem("isPlaying");
+            setTimeout(function () {
+              localStorage.removeItem("currentTime");
+            }, 100);
+          }
+        }
+      });
+
+      let erji = document.querySelector(".erji-top");
+      document.querySelector(".pai").addEventListener("click", function () {
+        erji.style.display = "block";
+      });
+      erji.addEventListener("click", function () {
+        erji.style.display = "none";
+      });
+    </script>
+    <!-- 防御,割裂,守护 -->
+    <script>
+      var canvas = document.getElementById("canvas"),
+        ctx = canvas.getContext("2d"),
+        ww = (canvas.width = window.innerWidth),
+        h = (canvas.height = window.innerHeight),
+        hue = 217,
+        stars = [],
+        count = 0,
+        maxStars = 3000; //星星数量
+      var canvas2 = document.createElement("canvas"),
+        ctx2 = canvas2.getContext("2d");
+      canvas2.width = 100;
+      canvas2.height = 100;
+      var half = canvas2.width / 2,
+        gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
+      gradient2.addColorStop(0.025, "#CCC");
+      gradient2.addColorStop(0.1, "hsl(" + hue + ", 61%, 33%)");
+      gradient2.addColorStop(0.25, "hsl(" + hue + ", 64%, 6%)");
+      gradient2.addColorStop(1, "transparent");
+      ctx2.fillStyle = gradient2;
+      ctx2.beginPath();
+      ctx2.arc(half, half, half, 0, Math.PI * 2);
+      ctx2.fill();
+      // End cache
+      function random(min, max) {
+        if (arguments.length < 2) {
+          max = min;
+          min = 0;
+        }
+        if (min > max) {
+          var hold = max;
+          max = min;
+          min = hold;
+        }
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function maxOrbit(x, y) {
+        var max = Math.max(x, y),
+          diameter = Math.round(Math.sqrt(max * max + max * max));
+        return diameter / 2;
+      }
+      var Star = function () {
+        this.orbitRadius = random(maxOrbit(ww, h));
+        this.radius = random(60, this.orbitRadius) / 8;
+        //星星大小
+        this.orbitX = ww / 2;
+        this.orbitY = h / 2;
+        this.timePassed = random(0, maxStars);
+        this.speed = random(this.orbitRadius) / 5000000;
+        //星星移动速度
+        this.alpha = random(2, 10) / 10;
+        count++;
+        stars[count] = this;
+      };
+      Star.prototype.draw = function () {
+        var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
+          y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
+          twinkle = random(10);
+        if (twinkle === 1 && this.alpha > 0) {
+          this.alpha -= 0.05;
+        } else if (twinkle === 2 && this.alpha < 1) {
+          this.alpha += 0.05;
+        }
+        ctx.globalAlpha = this.alpha;
+        ctx.drawImage(
+          canvas2,
+          x - this.radius / 2,
+          y - this.radius / 2,
+          this.radius,
+          this.radius
+        );
+        this.timePassed += this.speed;
+      };
+      for (var i = 0; i < maxStars; i++) {
+        new Star();
+      }
+      function animation() {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 0.5; //尾巴
+        ctx.fillStyle = "hsla(" + hue + ", 64%, 6%, 2)";
+        ctx.fillRect(0, 0, ww, h);
+        ctx.globalCompositeOperation = "lighter";
+        for (var i = 1, l = stars.length; i < l; i++) {
+          stars[i].draw();
+        }
+        window.requestAnimationFrame(animation);
+      }
+      animation();
+    </script>
+  </body>
+</html>
